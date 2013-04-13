@@ -1,7 +1,6 @@
 package com.beartronics.sschema
 
-import gnu.trove.list.TIntList
-import gnu.trove.list.array.TIntArrayList
+import scala.collection.mutable.ArrayBuffer
 
 class Schema {
     // Numerical id of this schema
