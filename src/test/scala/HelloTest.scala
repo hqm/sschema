@@ -1,4 +1,4 @@
-package com.alvinalexander.testproject
+package com.beartronics.sschema
 
 import org.scalatest.FunSuite
  
