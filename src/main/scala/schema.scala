@@ -2,10 +2,13 @@ package com.beartronics.sschema
 
 import scala.collection.mutable.ArrayBuffer
 
-class Schema {
+case class Action(val id: Int, val name: String)
+case class Item(val id: Int, val name: String)
+case class Stage(val id: Int, val name: String)
+
+class Schema(id: Int, action: Action) {
   // Numerical id of this schema
-  val id:Int = 0;
-    
+
   // The items in this schema's context list
   val posContext: ArrayBuffer[Item] = new ArrayBuffer[Item]()
   val negContext: ArrayBuffer[Item] = new ArrayBuffer[Item]();
@@ -55,23 +58,17 @@ class Schema {
   val xr_remainNegWithoutAction: ArrayBuffer[Int] = new ArrayBuffer[Int]();
   
     // List of schemas who override this schema;
-  val XOverride: ArrayBuffer[Schema] = new ArrayBuffer[Schema]();
+  val overridedBySchemas: ArrayBuffer[Schema] = new ArrayBuffer[Schema]()
   
-  val action: Action = null;
-
-  public Schema(index: Int, action: Action) {
-    this.id = index;
-    this.action = action;
-  }
 
   // Initialize this schema, for this stage
-  public void initialize(stage: Stage) {
+  def initialize(stage: Stage) = {
     // create extended context, result arrays
     
   }
 
-  public String toString() {
-    return "[Schema %s::%~s/ action %s/ %s::~%s]".format(posContext.toString(), negContext.toString(), action, posResult.toString(), negResult.toString());
+  override def toString(): String = {
+    "[Schema %s::%~s/ action %s/ %s::~%s]".format(posContext.toString(), negContext.toString(), action, posResult.toString(), negResult.toString())
   }
 
 }
