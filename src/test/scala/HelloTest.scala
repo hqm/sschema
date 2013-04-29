@@ -5,14 +5,13 @@ import org.scalatest.FunSuite
 class HelloSuite extends FunSuite {
  
   test("the name is set correctly in constructor") {
-    val p = Person("Barney Rubble") 
-    assert(p.name == "Barney Rubble")
+    val stage = Stage(1,"Stage A") 
+    assert(stage.name == "Stage A")
   }
  
-  test("a Person's name can be changed") {
-    val p = Person("Chad Johnson") 
-    p.name = "Ochocinco"
-    assert(p.name == "Ochocinco")
+  test("add schemas ") {
+    val stage = Stage(2,"Stage B") 
+    stage.initialize(nschemas = 10, nactions = 10, nitems = 10)
   }
 }
 

@@ -2,11 +2,33 @@ package com.beartronics.sschema
 
 import scala.collection.mutable.ArrayBuffer
 
-case class Action(val id: Int, val name: String)
-case class Item(val id: Int, val name: String)
-case class Stage(val id: Int, val name: String)
+//# ItemType
+object ItemType extends Enumeration {
+  type ItemType = Value
+  val Primitive, Synthetic = Value
+}
+import ItemType._
 
-class Schema(id: Int, action: Action) {
+case class Action(val id: Int, val name: String, val actionType: ItemType)
+
+case class Item(val id: Int, val name: String, val value: Float, val itemType: ItemType)
+
+case class Stage(val id: Int, val name: String, 
+                 val schemas: ArrayBuffer[Schema] = new ArrayBuffer[Schema](),
+                 val items: ArrayBuffer[Item] = new ArrayBuffer[Item](),
+                 val actions: ArrayBuffer[Action] = new ArrayBuffer[Action]()) {
+
+   def initialize(nschemas:Int = 10, nactions:Int = 10, nitems:Int = 10) = {
+     for (i <- 1 to nschemas) {
+       val action = Action(i, "Action "+i, ItemType.Primitive)
+       actions += action
+       schemas += new Schema(i, action)
+     }
+   }
+
+}
+
+class Schema(val id: Int, val action: Action) {
   // Numerical id of this schema
 
   // The items in this schema's context list
