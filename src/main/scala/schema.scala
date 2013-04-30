@@ -7,6 +7,7 @@ object ItemType extends Enumeration {
   type ItemType = Value
   val Primitive, Synthetic = Value
 }
+
 import ItemType._
 
 case class Action(val id: Int, val name: String, val actionType: ItemType)
@@ -19,7 +20,7 @@ case class Stage(val id: Int, val name: String,
                  val actions: ArrayBuffer[Action] = new ArrayBuffer[Action]()) {
 
    def initialize(nschemas:Int = 10, nactions:Int = 10, nitems:Int = 10) = {
-     for (i <- 1 to nschemas) {
+     for (i <- 0 until nschemas) {
        val action = Action(i, "Action "+i, ItemType.Primitive)
        actions += action
        schemas += new Schema(i, action)
@@ -90,7 +91,17 @@ class Schema(val id: Int, val action: Action) {
   }
 
   override def toString(): String = {
-    "[Schema %s::%~s/ action %s/ %s::~%s]".format(posContext.toString(), negContext.toString(), action, posResult.toString(), negResult.toString())
+    "<Schema [%s::~%s]/ action %s/ [%s::~%s]>".format(posContext.mkString(","), negContext.mkString(","), 
+                                                  action, 
+                                                  posResult.mkString(","), negResult.mkString(","))
   }
 
 }
+
+/*
+ import com.beartronics.sschema._
+ val stage = Stage(1,"Initial Stage")  
+ stage.initialize(nschemas = 10, nactions = 10, nitems = 10)
+ stage.schemas.foreach(x => println(x))
+
+*/
