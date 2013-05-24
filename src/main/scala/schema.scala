@@ -19,17 +19,23 @@ case class Stage(val id: Int, val name: String,
                  val items: ArrayBuffer[Item] = new ArrayBuffer[Item](),
                  val actions: ArrayBuffer[Action] = new ArrayBuffer[Action]()) {
 
-   def initialize(nschemas:Int = 10, nactions:Int = 10, nitems:Int = 10) = {
+   def initialize(nschemas:Int = 10, nitems:Int = 10) = {
      for (i <- 0 until nschemas) {
        val action = Action(i, "Action "+i, ItemType.Primitive)
        actions += action
-       schemas += new Schema(i, action)
+       schemas += new Schema(i, action, nitems)
      }
+
+     for (i <- 0 until nitems) {
+       val item = Item(i, "Item "+i, 0.0F, ItemType.Primitive)
+       items += item
+     }
+     println("items = "+items)
    }
 
 }
 
-class Schema(val id: Int, val action: Action) {
+class Schema(val id: Int, val action: Action, nitems: Int) {
   // Numerical id of this schema
 
   // The items in this schema's context list
@@ -55,30 +61,30 @@ class Schema(val id: Int, val action: Action) {
     // correlation, reliability, duration, cost
 
     // Extended Context counters
-  val xc_posTransitionWithAction: ArrayBuffer[Int] = new ArrayBuffer[Int]();
-  val xc_posTransitionWithoutAction: ArrayBuffer[Int] = new ArrayBuffer[Int]();
+  val xc_posTransitionWithAction: ArrayBuffer[Int] = ArrayBuffer.fill[Int](nitems)(0);
+  val xc_posTransitionWithoutAction: ArrayBuffer[Int] = ArrayBuffer.fill[Int](nitems)(0);
   
-  val xc_negTransitionWithAction: ArrayBuffer[Int] = new ArrayBuffer[Int]();
-  val xc_negTranstitionWithoutAction: ArrayBuffer[Int] = new ArrayBuffer[Int]();
+  val xc_negTransitionWithAction: ArrayBuffer[Int] = ArrayBuffer.fill[Int](nitems)(0);
+  val xc_negTranstitionWithoutAction: ArrayBuffer[Int] = ArrayBuffer.fill[Int](nitems)(0);
   
-  val xc_remainPosWithAction: ArrayBuffer[Int] = new ArrayBuffer[Int]();
-  val xc_remainPosWithoutAction: ArrayBuffer[Int] = new ArrayBuffer[Int]();
+  val xc_remainPosWithAction: ArrayBuffer[Int] = ArrayBuffer.fill[Int](nitems)(0);
+  val xc_remainPosWithoutAction: ArrayBuffer[Int] = ArrayBuffer.fill[Int](nitems)(0);
   
-  val xc_remainNegWithAction: ArrayBuffer[Int] = new ArrayBuffer[Int]();
-  val xc_remainNegWithoutAction: ArrayBuffer[Int] = new ArrayBuffer[Int]();
+  val xc_remainNegWithAction: ArrayBuffer[Int] = ArrayBuffer.fill[Int](nitems)(0);
+  val xc_remainNegWithoutAction: ArrayBuffer[Int] = ArrayBuffer.fill[Int](nitems)(0);
   
     // Extended Result counters
-  val xr_posTransitionWithAction: ArrayBuffer[Int] = new ArrayBuffer[Int]();
-  val xr_posTransitionWithoutAction: ArrayBuffer[Int] = new ArrayBuffer[Int]();
+  val xr_posTransitionWithAction: ArrayBuffer[Int] = ArrayBuffer.fill[Int](nitems)(0);
+  val xr_posTransitionWithoutAction: ArrayBuffer[Int] = ArrayBuffer.fill[Int](nitems)(0);
   
-  val xr_negTransitionWithAction: ArrayBuffer[Int] = new ArrayBuffer[Int]();
-  val xr_negTranstitionWithoutAction: ArrayBuffer[Int] = new ArrayBuffer[Int]();
+  val xr_negTransitionWithAction: ArrayBuffer[Int] = ArrayBuffer.fill[Int](nitems)(0);
+  val xr_negTranstitionWithoutAction: ArrayBuffer[Int] = ArrayBuffer.fill[Int](nitems)(0);
   
-  val xr_remainPosWithAction: ArrayBuffer[Int] = new ArrayBuffer[Int]();
-  val xr_remainPosWithoutAction: ArrayBuffer[Int] = new ArrayBuffer[Int]();
+  val xr_remainPosWithAction: ArrayBuffer[Int] = ArrayBuffer.fill[Int](nitems)(0);
+  val xr_remainPosWithoutAction: ArrayBuffer[Int] = ArrayBuffer.fill[Int](nitems)(0);
   
-  val xr_remainNegWithAction: ArrayBuffer[Int] = new ArrayBuffer[Int]();
-  val xr_remainNegWithoutAction: ArrayBuffer[Int] = new ArrayBuffer[Int]();
+  val xr_remainNegWithAction: ArrayBuffer[Int] = ArrayBuffer.fill[Int](nitems)(0);
+  val xr_remainNegWithoutAction: ArrayBuffer[Int] = ArrayBuffer.fill[Int](nitems)(0);
   
     // List of schemas who override this schema;
   val overridedBySchemas: ArrayBuffer[Schema] = new ArrayBuffer[Schema]()
@@ -86,8 +92,6 @@ class Schema(val id: Int, val action: Action) {
 
   // Initialize this schema, for this stage
   def initialize(stage: Stage) = {
-    // create extended context, result arrays
-    
   }
 
   override def toString(): String = {
