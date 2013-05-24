@@ -1,11 +1,18 @@
 package com.beartronics.sschema
 
+import org.apache.log4j.Logger
+
 import scala.collection.mutable.ArrayBuffer
 
 //# ItemType
 object ItemType extends Enumeration {
   type ItemType = Value
   val Primitive, Synthetic = Value
+}
+
+trait LogHelper {
+    val loggerName = this.getClass.getName
+    lazy val logger = Logger.getLogger(loggerName)
 }
 
 import ItemType._
@@ -33,9 +40,25 @@ case class Stage(val id: Int, val name: String,
      println("items = "+items)
    }
 
+
+   def addNewSchema():Int = {
+     val n = actions.size
+     val action = Action(n, "Action "+n, ItemType.Primitive)
+     actions += action
+     val newschema = new Schema(schemas.size, action, schemas.size)
+     schemas += newschema
+
+     for (i <- 0 until schemas.size) {
+       schemas(i).addSchema(newschema)
+     }
+
+     newschema.id
+
+   }
 }
 
-class Schema(val id: Int, val action: Action, nitems: Int) {
+class Schema(val id: Int, val action: Action, nitems: Int) extends LogHelper {
+
   // Numerical id of this schema
 
   // The items in this schema's context list
@@ -92,6 +115,33 @@ class Schema(val id: Int, val action: Action, nitems: Int) {
 
   // Initialize this schema, for this stage
   def initialize(stage: Stage) = {
+  }
+
+  // When a new schema is spun off, we need to add a slot for it to our extended contexts
+  def addSchema(schema: Schema) = {
+    xc_posTransitionWithAction += 0
+    xc_posTransitionWithoutAction += 0
+    xc_negTransitionWithAction += 0
+    xc_negTranstitionWithoutAction += 0
+    xc_remainPosWithAction += 0
+    xc_remainPosWithoutAction += 0
+    xc_remainNegWithAction += 0
+    xc_remainNegWithoutAction += 0
+  
+    // Extended Result counters
+    xr_posTransitionWithAction += 0
+    xr_posTransitionWithoutAction += 0
+    xr_negTransitionWithAction += 0
+    xr_negTranstitionWithoutAction += 0
+    xr_remainPosWithAction += 0
+    xr_remainPosWithoutAction += 0
+    xr_remainNegWithAction += 0
+    xr_remainNegWithoutAction += 0
+
+    // we do a check to make sure that the schema we're adding has the index we expect
+    if (xc_posTransitionWithAction.size != schema.id) {
+      logger.debug(s"addSchema new schema index ${schema.id} does not match xc_posTransitionWithAction.size ${xc_posTransitionWithAction.size}")
+    }
   }
 
   override def toString(): String = {

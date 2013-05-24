@@ -9,9 +9,21 @@ class HelloSuite extends FunSuite {
     assert(stage.name == "Stage A")
   }
  
-  test("add schemas ") {
+  test("create schemas ") {
     val stage = Stage(2,"Stage B") 
-    stage.initialize(nschemas = 10, nactions = 10, nitems = 10)
+    stage.initialize(nschemas = 10, nitems = 10)
   }
+
+  test("add new schema ") {
+    val stage = Stage(2,"Stage B") 
+    stage.initialize(nschemas = 10, nitems = 10)
+    val n = stage.addNewSchema()
+    assert(n == 10)
+    val n2 = stage.addNewSchema()
+    assert(n2 == 11)
+    assert(stage.schemas(0).xc_posTransitionWithAction.size == 12)
+
+  }
+
 }
 
